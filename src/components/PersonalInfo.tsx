@@ -48,7 +48,6 @@ export default function PersonalInfo({
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <h2 className="text-lg font-semibold mb-4 text-gray-900">Personal Information</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-6">
