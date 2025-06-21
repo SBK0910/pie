@@ -179,14 +179,14 @@ export default function FinancialInfo({
               type="button"
               variant="outline"
               onClick={() => onBack(form.getValues())}
-              className="h-10 w-full text-base font-medium flex items-center justify-center gap-2"
+              className="h-10 w-full text-sm font-medium flex items-center justify-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" />
               Back
             </Button>
             <Button
               type="submit"
-              className="h-10 w-full text-base font-medium flex items-center justify-center gap-2"
+              className="h-10 w-full text-sm font-medium flex items-center justify-center gap-2"
               size="lg"
             >
               <span>Continue</span>
