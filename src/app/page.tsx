@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PersonalInfo, { PersonalInfoData } from '@/components/PersonalInfo';
 import FinancialInfo, { FinancialInfoData } from '@/components/FinancialInfo';
+import Header from '@/components/Header';
 
 type FormData = {
     personal: PersonalInfoData;
@@ -31,10 +32,9 @@ export default function Home() {
 
     return (
         <div className="min-h-screen">
+            <Header />
             <main className="max-w-xl mx-auto p-6">
                 <div className="space-y-8">
-
-                    {/* Form Content */}
                     <div className="">
                         {step === 'personal' && (
                             <PersonalInfo
