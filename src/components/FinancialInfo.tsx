@@ -15,14 +15,12 @@ export type FinancialInfoData = z.infer<typeof financialInfoSchema>;
 
 interface FinancialInfoProps {
     data: FinancialInfoData;
-    onBack: (data: FinancialInfoData) => void;
     onNext: (data: FinancialInfoData) => void;
 }
 
 export default function FinancialInfo({
     data,
-    onBack,
-    onNext
+    onNext,
 }: FinancialInfoProps) {
     const form = useForm<FinancialInfoData>({
         resolver: zodResolver(financialInfoSchema),
@@ -236,22 +234,13 @@ export default function FinancialInfo({
                 />
 
                 {/* Navigation Buttons */}
-                <div className="grid grid-cols-2 gap-4 pt-2">
-                    <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => onBack(form.getValues())}
-                        className="h-10 w-full text-sm font-medium flex items-center justify-center gap-2"
-                    >
-                        <ArrowLeft className="h-4 w-4" />
-                        Back
-                    </Button>
+                <div className="grid grid-cols-1 gap-4 pt-2">
                     <Button
                         type="submit"
                         className="h-10 w-full text-sm font-medium flex items-center justify-center gap-2"
                         size="lg"
                     >
-                        <span>Continue</span>
+                        <span>Submit</span>
                         <ArrowRight className="h-4 w-4" />
                     </Button>
                 </div>

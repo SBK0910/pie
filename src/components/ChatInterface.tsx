@@ -1,9 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
-import { Send } from 'lucide-react';
 
 type Message = {
   id: string;
@@ -105,23 +103,25 @@ export function ChatInterface({
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSendMessage} className="px-6 pb-6 pt-4 ">
+      <form onSubmit={handleSendMessage} className="fixed bottom-0 left-0 right-0 mb-3">
+        <div className="max-w-xl mx-auto px-4">
           <Textarea
             ref={textareaRef}
             value={inputValue}
             placeholder="Type your message..."
-            className="w-full"
-            rows={10}
+            className="w-full min-h-[100px] max-h-[80vh] resize-y overflow-auto text-sm"
             onChange={handleTextareaChange}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
+                e.preventDefault();
+                handleSendMessage(e);
+              }
+              if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                return;
+              }
+            }}
           />
-          <Button 
-            type="submit" 
-            variant="outline"
-            size="icon" 
-            className="absolute right-1 bottom-1 h-8 w-8 text-foreground hover:bg-accent"
-          >
-            <Send className="h-4 w-4" />
-          </Button>
+        </div>
       </form>
     </div>
   );

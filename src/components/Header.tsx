@@ -11,7 +11,7 @@ export default function Header() {
     const router = useRouter();
 
     return (
-        <header className="sticky top-0 z-50 w-full bg-transparent">
+        <header className="sticky top-0 z-50 w-full bg-background">
             <div className="flex h-16 items-center justify-end px-4">
                 <div className="flex items-center rounded-md p-0.5 mr-auto">
                     <Link href="/" className="text-xl font-bold">PIE</Link>

@@ -1,65 +1,49 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import PersonalInfo, { PersonalInfoData } from '@/components/PersonalInfo';
 import FinancialInfo, { FinancialInfoData } from '@/components/FinancialInfo';
 import Header from '@/components/Header';
+import { ChatInterface } from '@/components/ChatInterface';
 
 type FormData = {
-    personal: PersonalInfoData;
     financial: FinancialInfoData;
 };
 
 export default function Home() {
-    const router = useRouter();
-    const [step, setStep] = useState<'personal' | 'financial'>('personal');
+    const [step, setStep] = useState<'financial' | 'chat'>('financial');
     const [formData, setFormData] = useState<FormData>({
-        personal: {
-            name: '',
-            dob: new Date(),
-            occupation: 'Student',
-        },
         financial: {
             yearlySavings: 0,
             emergencyFunds: 'Less than 3 months',
             dependents: 'Only myself',
             jobSecurity: 'Not secure',
             investmentObjective: 'Growth',
-            retirementTimeline:'5 - 15 years',
+            retirementTimeline: '5 - 15 years',
         },
     });
 
     return (
         <div className="min-h-screen">
             <Header />
-            <main className="max-w-xl mx-auto p-6">
+            <main className="max-w-xl mx-auto">
                 <div className="space-y-8">
-                    <div className="">
-                        {step === 'personal' && (
-                            <PersonalInfo
-                                data={formData.personal}
-                                onNext={(data) => {
-                                    setFormData((prev) => ({ ...prev, personal: data }));
-                                    setStep('financial');
-                                }}
-                            />
-                        )}
-
-                        {step === 'financial' && (
+                    {step === 'financial' && (
+                        <div className='flex flex-col gap-6 p-6'>
+                            <h1 className="text-2xl font-semibold">Financial Information</h1>
                             <FinancialInfo
                                 data={formData.financial}
-                                onBack={(data) => {
-                                    setFormData((prev) => ({ ...prev, financial: data }));
-                                    setStep('personal');
-                                }}
                                 onNext={(data) => {
                                     setFormData((prev) => ({ ...prev, financial: data }));
-                                    router.push('/chat');
+                                    setStep('chat');
                                 }}
                             />
-                        )}
-                    </div>
+                        </div>
+                    )}
+                    {step === 'chat' && (
+                        <div className='flex flex-col gap-6 h-full'>
+                            <ChatInterface />
+                        </div>
+                    )}
                 </div>
             </main>
         </div>
