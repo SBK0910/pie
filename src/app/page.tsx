@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 import FinancialInfo from '@/components/FinancialInfo';
 import { ChatInterface } from '@/components/ChatInterface';
 import InvestmentInfo from '@/components/InvestmentInfo';
@@ -27,6 +28,36 @@ export default function Home() {
         },
     });
 
+    const handleSubmit = async (data: InvestmentInfoData) => {
+        try {
+            const response = await fetch('/api/profiling', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    financial: formData.financial, 
+                    investment: data 
+                }),
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.error || 'Failed to save profile');
+            }
+            
+            toast.success('Profile saved successfully!');
+            setFormData(prev => ({ ...prev, investment: data }));
+            setStep('chat');
+        } catch (error) {
+            console.error('Error saving profile:', error);
+            const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+            toast.error(errorMessage);
+            throw error; // Re-throw to let the form handle it
+        }
+    };
+
     return (
         <div className="min-h-screen">
             <main className="max-w-xl mx-auto">
@@ -46,10 +77,7 @@ export default function Home() {
                         <div className='flex flex-col gap-6 h-full p-6 pt-[15vh]'>
                             <InvestmentInfo
                                 data={formData.investment}
-                                onNext={(data) => {
-                                    setFormData((prev) => ({ ...prev, investment: data }));
-                                    setStep('chat');
-                                }}
+                                onNext={handleSubmit}
                                 onPrevious={(data) => {
                                     setFormData((prev) => ({ ...prev, investment: data }));
                                     setStep('financial');

@@ -27,9 +27,9 @@ export default function FinancialInfo({ data, onNext }: FinancialInfoProps) {
     };
 
     return (
-        <div className="w-full max-w-2xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold mb-2">Financial Information</h1>
+        <div className="w-full max-w-2xl mx-auto space-y-12">
+            <div>
+                <h1 className="text-2xl font-semibold">Financial Information</h1>
                 <p className="text-muted-foreground">Please share your financial details to help us better understand your situation.</p>
             </div>
 

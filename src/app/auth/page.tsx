@@ -1,14 +1,23 @@
 'use client';
 
-import { useSignIn, useSignUp } from '@clerk/nextjs';
+import { useSignIn } from '@clerk/nextjs';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/ui/icons';
+import { toast } from 'sonner';
+import { useUser } from '@clerk/nextjs';
 
 export default function AuthPage() {
     const { signIn } = useSignIn();
+    const { isSignedIn } = useUser();
 
     const signInWithGoogle = async () => {
+
+        if (isSignedIn) {
+            toast.success('You are already signed in!');
+            return;
+        }
+        
         if (!signIn) return;
         
         try {
