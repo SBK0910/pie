@@ -5,11 +5,14 @@ import { ArrowLeft, Moon, Settings2, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from './ui/button';
 import { useRouter, usePathname } from 'next/navigation';
+import { useClerk, useUser } from '@clerk/nextjs';
 
 export default function Header() {
     const { setTheme, theme } = useTheme();
     const router = useRouter();
     const pathname = usePathname();
+    const {isSignedIn} = useUser();
+const {signOut} = useClerk();
 
     return (
         <header className="fixed top-0 z-50 w-full bg-background">
@@ -22,15 +25,20 @@ export default function Header() {
                 </div>
             ) : (
                 <div className="flex h-16 items-center justify-end px-4">
-                    <div className="flex items-center rounded-md p-0.5 mr-auto">
-                        <Link href="/" className="text-xl font-bold">PIE</Link>
-                    </div>
                     <div className="flex items-center space-x-0.5 border rounded-md p-0.5">
                         <Button
                             type='button'
                             variant='ghost'
                             size='icon'
-                            onClick={() => router.push('/auth')}
+                            onClick={() => {
+                                if (isSignedIn) {
+                                    signOut({
+                                        redirectUrl: '/auth',
+                                    });
+                                } else {
+                                    router.push('/auth');
+                                }
+                            }}
                         >
                             <Settings2 className="size-4" />
                         </Button>

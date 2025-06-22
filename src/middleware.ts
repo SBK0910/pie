@@ -1,29 +1,25 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { clerkMiddleware,createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server';
 
-// Create a matcher for protected routes
 const isProtectedRoute = createRouteMatcher([
-  '/dashboard(.*)',
-  '/profile(.*)',
-  // Add other protected routes here
-]);
+    '/settings(.*)',
+    '/'
+])
 
 export default clerkMiddleware(async (auth, req) => {
-  // Allow access to public routes without authentication
-  if (!isProtectedRoute(req)) {
-    return; // Allow public routes
-  }
-  
-  // Allow access to auth routes when not signed in
-  if (req.nextUrl.pathname.startsWith('/auth')) {
-    return;
-  }
-  
-  // For protected routes, require authentication
-  const session = await auth();
-  if (!session) {
-    return Response.redirect(new URL('/auth/sign-in', req.url));
-  }
-});
+    if (req.nextUrl.pathname.startsWith('/auth')) {
+        return NextResponse.next();
+    }
+
+    if (isProtectedRoute(req)) {
+        const {userId} = await auth();
+        if (!userId) {
+            return NextResponse.redirect(new URL('/auth', req.url));
+        }
+    }
+    
+    return NextResponse.next();
+})
 
 export const config = {
   matcher: [
@@ -32,4 +28,4 @@ export const config = {
     // Always run for API routes
     '/(api|trpc)(.*)',
   ],
-};
+}
