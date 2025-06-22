@@ -24,7 +24,6 @@ export default function Home() {
 
     return (
         <div className="min-h-screen">
-            <Header />
             <main className="max-w-xl mx-auto">
                 <div className="space-y-8">
                     {step === 'financial' && (
