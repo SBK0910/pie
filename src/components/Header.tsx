@@ -15,7 +15,7 @@ export default function Header() {
 const {signOut} = useClerk();
 
     return (
-        <header className="fixed top-0 z-50 w-full bg-background">
+        <header className="fixed top-0 z-50 w-full bg-transparent">
             {pathname === '/auth' ? (
                 <div className="flex h-16 items-center justify-start px-4">
                     <Button variant="ghost" onClick={() => router.push('/')} className='text-sm tracking-tight cursor-pointer'>
@@ -25,7 +25,7 @@ const {signOut} = useClerk();
                 </div>
             ) : (
                 <div className="flex h-16 items-center justify-end px-4">
-                    <div className="flex items-center space-x-0.5 border rounded-md p-0.5">
+                    <div className="flex items-center space-x-0.5 border rounded-md p-0.5 bg-background">
                         <Button
                             type='button'
                             variant='ghost'

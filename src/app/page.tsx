@@ -53,6 +53,10 @@ export default function Home() {
         } catch (error) {
             console.error('Error saving profile:', error);
             const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+            if (errorMessage === 'A profile already exists for this user'){
+                setStep('chat');
+                return;
+            }
             toast.error(errorMessage);
             throw error; // Re-throw to let the form handle it
         }
@@ -60,7 +64,7 @@ export default function Home() {
 
     return (
         <div className="min-h-screen">
-            <main className="max-w-xl mx-auto">
+            <main className="max-w-3xl mx-auto">
                 <div className="space-y-8">
                     {step === 'financial' && (
                         <div className='flex flex-col gap-6 p-6 pt-[15vh]'>
