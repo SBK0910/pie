@@ -8,6 +8,7 @@ export const dependentsEnum = pgEnum('dependents', financialInfoSchema.shape.dep
 export const jobSecurityEnum = pgEnum('job_security', investmentInfoSchema.shape.jobSecurity.options);
 export const retirementTimelineEnum = pgEnum('retirement_timeline', investmentInfoSchema.shape.retirementTimeline.options);
 export const investmentObjectiveEnum = pgEnum('investment_objective', investmentInfoSchema.shape.investmentObjective.options);
+export const stageEnum = pgEnum('stage', ['static', 'chat']);
 
 
 export const profilingSchema = pgTable('profiling', {
@@ -21,6 +22,7 @@ export const profilingSchema = pgTable('profiling', {
     investmentObjective: investmentObjectiveEnum('investment_objective').notNull(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    stage: stageEnum('stage').notNull().default('static'),
 }, (table) => [
     check('yearly_savings_check', sql`${table.yearlySavings} >= 0`),
 ]);

@@ -1,21 +1,23 @@
-'use client';
-
-import { useState } from 'react';
-import { toast } from 'sonner';
-import FinancialInfo from '@/components/FinancialInfo';
-import { ChatInterface } from '@/components/ChatInterface';
-import InvestmentInfo from '@/components/InvestmentInfo';
+import { db } from "@/db";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import { profilingSchema as profilingTable } from "@/db/schema/schema";
+import { eq } from "drizzle-orm";
+import ClientInfo from "@/components/ClientInfo";
 import type { FinancialInfoData } from '@/schemas/financial';
 import type { InvestmentInfoData } from '@/schemas/investment';
 
-type FormData = {
-    financial: FinancialInfoData;
-    investment: InvestmentInfoData;
-};
-
-export default function Home() {
-    const [step, setStep] = useState<'financial' | 'investment' | 'chat'>('financial');
-    const [formData, setFormData] = useState<FormData>({
+export default async function Home() {
+    const { userId } = await auth();
+    if (!userId) {
+        return redirect('/auth');
+    }
+    
+    let defaultStep: 'financial' | 'investment' | 'chat' = 'financial';
+    let defaultValues: {
+        financial: FinancialInfoData;
+        investment: InvestmentInfoData;
+    } = {
         financial: {
             yearlySavings: 0,
             emergencyFunds: 'Less than 3 months',
@@ -26,76 +28,31 @@ export default function Home() {
             retirementTimeline: '5 - 15 years',
             investmentObjective: 'Growth',
         },
-    });
-
-    const handleSubmit = async (data: InvestmentInfoData) => {
-        try {
-            const response = await fetch('/api/profiling', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    financial: formData.financial, 
-                    investment: data 
-                }),
-            });
-            
-            const result = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(result.error || 'Failed to save profile');
-            }
-            
-            toast.success('Profile saved successfully!');
-            setFormData(prev => ({ ...prev, investment: data }));
-            setStep('chat');
-        } catch (error) {
-            console.error('Error saving profile:', error);
-            const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
-            if (errorMessage === 'A profile already exists for this user'){
-                setStep('chat');
-                return;
-            }
-            toast.error(errorMessage);
-            throw error; // Re-throw to let the form handle it
-        }
     };
 
+    try {
+        const [profile] = await db.select().from(profilingTable).where(eq(profilingTable.userId, userId)).limit(1);
+        if (profile) {
+            defaultStep = profile.stage === 'static' ? 'financial' : 'chat';
+            defaultValues = {
+                financial: {
+                    yearlySavings: profile.yearlySavings,
+                    emergencyFunds: profile.emergencyFunds,
+                    dependents: profile.dependents,
+                },
+                investment: {
+                    jobSecurity: profile.jobSecurity,
+                    retirementTimeline: profile.retirementTimeline,
+                    investmentObjective: profile.investmentObjective,
+                },
+            };
+        }
+    } catch (error) {
+        console.error("Error fetching profile:", error);
+    }
+
     return (
-        <div className="min-h-screen">
-            <main className="max-w-3xl mx-auto">
-                <div className="space-y-8">
-                    {step === 'financial' && (
-                        <div className='flex flex-col gap-6 p-6 pt-[15vh]'>
-                            <FinancialInfo
-                                data={formData.financial}
-                                onNext={(data) => {
-                                    setFormData((prev) => ({ ...prev, financial: data }));
-                                    setStep('investment');
-                                }}
-                            />
-                        </div>
-                    )}
-                    {step === 'investment' && (
-                        <div className='flex flex-col gap-6 h-full p-6 pt-[15vh]'>
-                            <InvestmentInfo
-                                data={formData.investment}
-                                onNext={handleSubmit}
-                                onPrevious={(data) => {
-                                    setFormData((prev) => ({ ...prev, investment: data }));
-                                    setStep('financial');
-                                }}
-                            />
-                        </div>
-                    )}
-                    {step === 'chat' && (
-                        <div className='flex flex-col gap-6 h-full'>
-                            <ChatInterface />
-                        </div>
-                    )}
-                </div>
-            </main>
-        </div>
+        <ClientInfo defaultStep={defaultStep} defaultValues={defaultValues} />
     );
+    
 }

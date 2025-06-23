@@ -8,6 +8,13 @@
       "when": 1750598204978,
       "tag": "0000_clumsy_supreme_intelligence",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750615780783,
+      "tag": "0001_oval_mandroid",
+      "breakpoints": true
     }
   ]
 }
