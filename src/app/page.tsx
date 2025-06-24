@@ -4,8 +4,9 @@ import { redirect } from "next/navigation";
 import { profilingSchema as profilingTable } from "@/db/schema/schema";
 import { eq } from "drizzle-orm";
 import ClientInfo from "@/components/ClientInfo";
-import type { FinancialInfoData } from '@/schemas/financial';
-import type { InvestmentInfoData } from '@/schemas/investment';
+import type { FinancialInfoType,InvestmentInfoType } from '@/schemas/validators/profiling.validators';
+import ProfilingProvider from "@/components/providers/profiling-provider";
+import Header from "@/components/Header";
 
 export default async function Home() {
     const { userId } = await auth();
@@ -15,8 +16,8 @@ export default async function Home() {
     
     let defaultStep: 'financial' | 'investment' | 'chat' = 'financial';
     let defaultValues: {
-        financial: FinancialInfoData;
-        investment: InvestmentInfoData;
+        financial: FinancialInfoType;
+        investment: InvestmentInfoType;
     } = {
         financial: {
             yearlySavings: 0,
@@ -52,7 +53,12 @@ export default async function Home() {
     }
 
     return (
-        <ClientInfo defaultStep={defaultStep} defaultValues={defaultValues} />
+        <ProfilingProvider defaultProfiling={{ stage: 'financial', formData: defaultValues }}>
+            <Header />
+            <main className="max-w-3xl mx-auto space-y-8 min-h-screen pt-20">
+                <ClientInfo />
+            </main>
+        </ProfilingProvider>
     );
     
 }

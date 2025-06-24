@@ -1,7 +1,6 @@
 import { pgTable, uuid, integer, pgEnum, timestamp, text, check } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { financialInfoSchema } from '@/schemas/financial';
-import { investmentInfoSchema } from '@/schemas/investment';
+import { financialInfoSchema, investmentInfoSchema } from '@/schemas/validators/profiling.validators';
 
 export const emergencyFundsEnum = pgEnum('emergency_funds', financialInfoSchema.shape.emergencyFunds.options);
 export const dependentsEnum = pgEnum('dependents', financialInfoSchema.shape.dependents.options);
