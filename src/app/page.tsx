@@ -55,7 +55,7 @@ export default async function Home() {
     return (
         <ProfilingProvider defaultProfiling={{ stage: 'financial', formData: defaultValues }}>
             <Header />
-            <main className="max-w-3xl mx-auto space-y-8 min-h-screen pt-20">
+            <main className="max-w-3xl mx-auto space-y-8 min-h-screen">
                 <ClientInfo />
             </main>
         </ProfilingProvider>

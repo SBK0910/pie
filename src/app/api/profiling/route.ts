@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { profilingSchema } from "@/schemas/schema";
+import { profilingSchema } from "@/schemas/validators/profiling.validators";
 import { profilingSchema as profilingTable } from "@/db/schema/schema";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
@@ -16,7 +16,11 @@ export async function PUT(req: NextRequest) {
             );
         }
 
-        const { financial, investment } = result.data;
+        const { formData: {
+            financial,
+            investment
+        }} = result.data;
+        
         const { userId } = await auth();
         if (!userId) {
             return NextResponse.json(
