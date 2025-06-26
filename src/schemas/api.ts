@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { financialInfoSchema } from "./financial";
-import { investmentInfoSchema } from "./investment";
+import { financialInfoSchema } from "./validators/profiling.validators";
+import { investmentInfoSchema } from "./validators/profiling.validators";
 
 export const profilingPutSchema = z.object({
     data: z.object({
