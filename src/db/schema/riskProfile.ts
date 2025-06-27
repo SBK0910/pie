@@ -1,4 +1,4 @@
-import { pgTable, uuid, timestamp, foreignKey, pgEnum } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, timestamp, pgEnum } from 'drizzle-orm/pg-core';
 import { userProfiles } from './userProfile';
 
 export const investmentObjectiveEnum = pgEnum('investment_objective',
@@ -20,7 +20,7 @@ export const marketVolatilityEnum = pgEnum('market_volatility',
     ['Avoid', 'Reduce', 'Maintain', 'Increase']);
 
 export const riskProfiles = pgTable('risk_profiles', {
-    id: uuid('id').primaryKey(),
+    id: uuid('id').primaryKey().references(() => userProfiles.id),
 
     investmentObjective: investmentObjectiveEnum('investment_objective'),
     marketReaction: marketReactionEnum('market_reaction'),
@@ -31,10 +31,4 @@ export const riskProfiles = pgTable('risk_profiles', {
 
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
-}, (table) => [
-    foreignKey({
-        columns: [table.id],
-        foreignColumns: [userProfiles.id],
-        name: 'risk_profiles_user_profiles_id_fkey',
-    })
-]);
+});

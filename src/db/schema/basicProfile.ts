@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { pgTable, uuid, timestamp, integer, pgEnum, check, foreignKey } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, timestamp, integer, pgEnum, check } from 'drizzle-orm/pg-core';
 import { userProfiles } from './userProfile';
 
 export const emergencyFundsEnum = pgEnum('emergency_funds',
@@ -19,7 +19,7 @@ export const retirementTimelineEnum = pgEnum('retirement_timeline',
         '15 - 25 years', 'More than 25 years']);
 
 export const basicProfiles = pgTable('basic_profiles', {
-    id: uuid('id').primaryKey(),
+    id: uuid('id').primaryKey().references(() => userProfiles.id),
 
     yearlySavings: integer('yearly_savings').notNull(),
     debt: integer('debt').notNull(),
@@ -34,9 +34,4 @@ export const basicProfiles = pgTable('basic_profiles', {
 }, (table) => [
     check('yearly_savings_check', sql`${table.yearlySavings} >= 0`),
     check('debt_check', sql`${table.debt} >= 0`),
-    foreignKey({
-        columns: [table.id],
-        foreignColumns: [userProfiles.id],
-        name: 'financial_profiles_user_profiles_id_fkey',
-    })
 ]);
