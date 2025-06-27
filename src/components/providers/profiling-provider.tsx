@@ -1,12 +1,20 @@
 'use client';
 
 import { createContext, useState, useContext } from "react";
-import type { ProfilingType, FinancialInfoType, InvestmentInfoType } from "@/schemas/validators/profiling.validators";
+import type { BasicFinancialProfileType, BasicProfileType, BasicRiskProfileType } from "@/schemas/validators/basicprofile.validator";
+
+export type ProfilingType = {
+    stage: 'basic_financial_profile' | 'basic_risk_profile' | 'chat';
+    formData: {
+        basicProfile: BasicProfileType;
+        profileId: string;
+    };
+};
 
 export const ProfilingContext = createContext<{
     profiling: ProfilingType;
-    updateFinancial: (financial: FinancialInfoType) => void;
-    updateInvestment: (investment: InvestmentInfoType) => void;
+    updateBasicFinancial: (financial: BasicFinancialProfileType) => void;
+    updateBasicRisk: (risk: BasicRiskProfileType) => void;
     updateStage: (stage: ProfilingType['stage']) => void;
 } | null>(null);
 
@@ -18,22 +26,28 @@ interface ProfilingProviderProps {
 export default function ProfilingProvider({ children, defaultProfiling }: ProfilingProviderProps) {
     const [profiling, setProfiling] = useState<ProfilingType>(defaultProfiling);
 
-    const updateFinancial = (financial: FinancialInfoType) => {
+    const updateBasicFinancial = (financial: BasicFinancialProfileType) => {
         setProfiling({
             ...profiling,
             formData: {
                 ...profiling.formData,
-                financial,
+                basicProfile: {
+                    ...profiling.formData.basicProfile,
+                    ...financial,
+                },
             },
         });
     };
 
-    const updateInvestment = (investment: InvestmentInfoType) => {
+    const updateBasicRisk = (risk: BasicRiskProfileType) => {
         setProfiling({
             ...profiling,
             formData: {
                 ...profiling.formData,
-                investment,
+                basicProfile: {
+                    ...profiling.formData.basicProfile,
+                    ...risk,
+                },
             },
         });
     };
@@ -48,8 +62,8 @@ export default function ProfilingProvider({ children, defaultProfiling }: Profil
     return (
         <ProfilingContext.Provider value={{
             profiling,
-            updateFinancial,
-            updateInvestment,
+            updateBasicFinancial,
+            updateBasicRisk,
             updateStage,
         }}>
             {children}

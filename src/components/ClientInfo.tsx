@@ -5,7 +5,6 @@ import { Button } from "./ui/button";
 import FinancialForm from "./forms/FinancialForm";
 import InvestmentForm from "./forms/InvestmentForm";
 import { useEffect, useState, useRef } from "react";
-import { headers } from "next/headers";
 
 interface Message {
     id: string;
@@ -262,13 +261,13 @@ export default function ClientInfo() {
 
     return (
         <div className="relative w-full h-screen flex flex-col">
-            {stage === 'financial' && (
+            {stage === 'basic_financial_profile' && (
                 <div className="p-4 md:p-6">
                     <FinancialForm />
                 </div>
             )}
 
-            {stage === 'investment' && (
+            {stage === 'basic_risk_profile' && (
                 <div className="p-4 md:p-6">
                     <InvestmentForm />
                 </div>

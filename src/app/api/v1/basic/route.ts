@@ -73,6 +73,10 @@ export async function PUT(req: NextRequest) {
             })
             .returning();
 
+        await db.update(userProfiles)
+            .set({ profileStage: 'risk' })
+            .where(eq(userProfiles.id, profile.id));
+
         // 6. Return success response
         return NextResponse.json({
             success: true,

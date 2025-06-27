@@ -27,14 +27,14 @@ export default function Header() {
                 </div>
             ) : (
                 <div className="flex h-16 items-center justify-end px-3">
-                    {stage === 'investment' && (
-                        <Button variant="ghost" onClick={() => updateStage('financial')} className='text-sm tracking-tight cursor-pointer mr-auto'>
+                    {stage === 'basic_risk_profile' && (
+                        <Button variant="ghost" onClick={() => updateStage('basic_financial_profile')} className='text-sm tracking-tight cursor-pointer mr-auto'>
                             <ArrowLeft className="size-5" />
                             <span className='sr-only'>Back To Financial</span>
                         </Button>
                     )}
                     {stage === 'chat' && (
-                        <Button variant="ghost" onClick={() => updateStage('investment')} className='text-sm tracking-tight cursor-pointer mr-auto'>
+                        <Button variant="ghost" onClick={() => updateStage('basic_risk_profile')} className='text-sm tracking-tight cursor-pointer mr-auto'>
                             <ArrowLeft className="size-5" />
                             <span className='sr-only'>Back To Investment</span>
                         </Button>
