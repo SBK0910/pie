@@ -1,7 +1,12 @@
 import { pgTable, uuid, integer, pgEnum, timestamp, text, check } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { dependentsEnum, jobSecurityEnum, retirementTimelineEnum, investmentObjectiveEnum } from './riskProfile';
-import { emergencyFundsEnum } from './financialProfile';
+import { investmentObjectiveEnum } from './riskProfile';
+import { 
+    emergencyFundsEnum, 
+    dependentsEnum, 
+    jobSecurityEnum, 
+    retirementTimelineEnum 
+} from './basicProfile';
 
 export const stageEnum = pgEnum('stage', ['static', 'chat']);
 

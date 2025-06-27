@@ -1,0 +1,444 @@
+{
+  "id": "3712bad0-4af6-4de7-b6ed-10d233980e6e",
+  "prevId": "56160a6c-0674-4d30-b226-50ec231ba444",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.financial_profiles": {
+      "name": "financial_profiles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "yearly_savings": {
+          "name": "yearly_savings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "debt": {
+          "name": "debt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "emergency_funds": {
+          "name": "emergency_funds",
+          "type": "emergency_funds",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "financial_profiles_user_profiles_id_fkey": {
+          "name": "financial_profiles_user_profiles_id_fkey",
+          "tableFrom": "financial_profiles",
+          "tableTo": "user_profiles",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "yearly_savings_check": {
+          "name": "yearly_savings_check",
+          "value": "\"financial_profiles\".\"yearly_savings\" >= 0"
+        },
+        "debt_check": {
+          "name": "debt_check",
+          "value": "\"financial_profiles\".\"debt\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.risk_profiles": {
+      "name": "risk_profiles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "dependents": {
+          "name": "dependents",
+          "type": "dependents",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "job_security": {
+          "name": "job_security",
+          "type": "job_security",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "retirement_timeline": {
+          "name": "retirement_timeline",
+          "type": "retirement_timeline",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "investment_objective": {
+          "name": "investment_objective",
+          "type": "investment_objective",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "market_reaction": {
+          "name": "market_reaction",
+          "type": "market_reaction",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decision_making": {
+          "name": "decision_making",
+          "type": "decision_making",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "investment_horizon": {
+          "name": "investment_horizon",
+          "type": "investment_horizon",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "risk_comfort": {
+          "name": "risk_comfort",
+          "type": "risk_comfort",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "market_volatility": {
+          "name": "market_volatility",
+          "type": "market_volatility",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "risk_profiles_user_profiles_id_fkey": {
+          "name": "risk_profiles_user_profiles_id_fkey",
+          "tableFrom": "risk_profiles",
+          "tableTo": "user_profiles",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.profiling": {
+      "name": "profiling",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "yearly_savings": {
+          "name": "yearly_savings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "emergency_funds": {
+          "name": "emergency_funds",
+          "type": "emergency_funds",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dependents": {
+          "name": "dependents",
+          "type": "dependents",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "job_security": {
+          "name": "job_security",
+          "type": "job_security",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "retirement_timeline": {
+          "name": "retirement_timeline",
+          "type": "retirement_timeline",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "investment_objective": {
+          "name": "investment_objective",
+          "type": "investment_objective",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "stage": {
+          "name": "stage",
+          "type": "stage",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'static'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "profiling_user_id_unique": {
+          "name": "profiling_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "yearly_savings_check": {
+          "name": "yearly_savings_check",
+          "value": "\"profiling\".\"yearly_savings\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.user_profiles": {
+      "name": "user_profiles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuid_generate_v4()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.emergency_funds": {
+      "name": "emergency_funds",
+      "schema": "public",
+      "values": [
+        "Less than 3 months",
+        "3 - 6 months",
+        "6 months to 1 year",
+        "More than 1 year"
+      ]
+    },
+    "public.decision_making": {
+      "name": "decision_making",
+      "schema": "public",
+      "values": [
+        "Emotional",
+        "Herd following",
+        "Advice based",
+        "Analytical",
+        "Plan driven"
+      ]
+    },
+    "public.dependents": {
+      "name": "dependents",
+      "schema": "public",
+      "values": [
+        "Only myself",
+        "Two people including myself",
+        "3 - 4 people other than myself",
+        "More than 4 people other than myself"
+      ]
+    },
+    "public.investment_horizon": {
+      "name": "investment_horizon",
+      "schema": "public",
+      "values": [
+        "Very short term",
+        "Short term",
+        "Medium term",
+        "Long term"
+      ]
+    },
+    "public.investment_objective": {
+      "name": "investment_objective",
+      "schema": "public",
+      "values": [
+        "Preserve",
+        "Income",
+        "Growth",
+        "Aggressive"
+      ]
+    },
+    "public.job_security": {
+      "name": "job_security",
+      "schema": "public",
+      "values": [
+        "Not secure",
+        "Somewhat secure",
+        "Secure",
+        "Very secure",
+        "Job flexibility"
+      ]
+    },
+    "public.market_reaction": {
+      "name": "market_reaction",
+      "schema": "public",
+      "values": [
+        "Panic sell",
+        "Partial sell",
+        "Hold",
+        "Buy more"
+      ]
+    },
+    "public.market_volatility": {
+      "name": "market_volatility",
+      "schema": "public",
+      "values": [
+        "Avoid",
+        "Reduce",
+        "Maintain",
+        "Increase"
+      ]
+    },
+    "public.retirement_timeline": {
+      "name": "retirement_timeline",
+      "schema": "public",
+      "values": [
+        "Less than 5 years",
+        "5 - 15 years",
+        "15 - 25 years",
+        "More than 25 years"
+      ]
+    },
+    "public.risk_comfort": {
+      "name": "risk_comfort",
+      "schema": "public",
+      "values": [
+        "Very uncomfortable",
+        "Uncomfortable",
+        "Neutral",
+        "Comfortable",
+        "Very comfortable"
+      ]
+    },
+    "public.stage": {
+      "name": "stage",
+      "schema": "public",
+      "values": [
+        "static",
+        "chat"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
