@@ -27,36 +27,38 @@ export default function ProfilingProvider({ children, defaultProfiling }: Profil
     const [profiling, setProfiling] = useState<ProfilingType>(defaultProfiling);
 
     const updateBasicFinancial = (financial: BasicFinancialProfileType) => {
-        setProfiling({
-            ...profiling,
+        setProfiling(prev => ({
+            ...prev,
             formData: {
-                ...profiling.formData,
+                ...prev.formData,
                 basicProfile: {
-                    ...profiling.formData.basicProfile,
-                    ...financial,
-                },
-            },
-        });
+                    ...prev.formData.basicProfile,
+                    ...financial
+                }
+            }
+        }));
     };
 
     const updateBasicRisk = (risk: BasicRiskProfileType) => {
-        setProfiling({
-            ...profiling,
+        console.log(risk);
+        setProfiling(prev => ({
+            ...prev,
             formData: {
-                ...profiling.formData,
+                ...prev.formData,
                 basicProfile: {
-                    ...profiling.formData.basicProfile,
-                    ...risk,
-                },
-            },
-        });
+                    ...prev.formData.basicProfile,
+                    ...risk
+                }
+            }
+        }));
+        console.log(profiling);
     };
 
     const updateStage = (stage: ProfilingType['stage']) => {
-        setProfiling({
-            ...profiling,
+        setProfiling(prev => ({
+            ...prev,
             stage,
-        });
+        }));
     };
 
     return (

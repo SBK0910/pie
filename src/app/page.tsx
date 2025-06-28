@@ -7,6 +7,7 @@ import ProfilingProvider, { ProfilingType } from "@/components/providers/profili
 import Header from "@/components/Header";
 import { userProfiles } from "@/db/schema/userProfile";
 import { Toaster } from "sonner";
+import { basicProfiles } from "@/db/schema/basicProfile";
 
 export default async function Home() {
     // Initialize with default values
@@ -31,7 +32,7 @@ export default async function Home() {
             return redirect('/auth');
         }
 
-        let  [profile] = await db.select().
+        let [profile] = await db.select().
             from(userProfiles).
             where(eq(userProfiles.user_id, userId)).
             orderBy(desc(userProfiles.id)).
@@ -44,24 +45,20 @@ export default async function Home() {
             }).returning();
         }
 
-        defaultProfile = {
-            stage: profile.profileStage === 'basic' ? 'basic_financial_profile' : 'chat',
-            formData: {
-                profileId: profile.id,
-                basicProfile: {
-                    yearlySavings: 0,
-                    debt: 0,
-                    emergencyFunds: 'Less than 3 months',
-                    dependents: 'Only myself',
-                    jobSecurity: 'Not secure',
-                    retirementTimeline: '5 - 15 years',
-                },
-            },
-        };
+        let [basicProfile] = await db.select().
+            from(basicProfiles).
+            where(eq(basicProfiles.id, profile.id))
+
+        if (basicProfile) {
+            defaultProfile.formData.basicProfile = basicProfile;
+        }
+
+        defaultProfile.formData.profileId = profile.id;
+
     } catch (error) {
         console.error("Error fetching profile:", error);
     }
-
+    console.log(defaultProfile);
     return (
         <ProfilingProvider defaultProfiling={defaultProfile}>
             <Header />

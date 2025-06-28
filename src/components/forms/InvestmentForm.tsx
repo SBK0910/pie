@@ -10,9 +10,12 @@ import { basicRiskProfile, BasicRiskProfileType } from '@/schemas/validators/bas
 import { FormSelectField } from './reusable/FormSelect';
 import { api } from '@/lib/api/client';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 export default function InvestmentForm() {
     const { updateBasicRisk, updateStage, profiling } = useProfiling();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
 
     const form = useForm<BasicRiskProfileType>({
         resolver: zodResolver(basicRiskProfile),
@@ -25,15 +28,28 @@ export default function InvestmentForm() {
     });
 
     const onSubmit = async (values: BasicRiskProfileType) => {
-        updateBasicRisk(values);
         try {
+            setIsSubmitting(true);
+            // Merge current financial profile with new risk values locally
+            const profileData = {
+                ...profiling.formData.basicProfile,
+                ...values,
+            };
+
+            // Persist immediately using merged data (avoids stale context state)
             await api.saveProfile({
-                basicProfile: profiling.formData.basicProfile,
-                profileId: profiling.formData.profileId
+                basicProfile: profileData,
+                profileId: profiling.formData.profileId,
             });
+
+            // Update local context state afterwards so UI reflects new stage
+            updateBasicRisk(values);
             updateStage('chat');
         } catch (error) {
-            toast.error('Failed to save profile');
+            const message = error instanceof Error ? error.message : 'Failed to save profile';
+            toast.error(message);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -107,9 +123,9 @@ export default function InvestmentForm() {
                     </div>
 
                     <div className="flex justify-between pt-4  w-full">
-                        <Button type="submit" className="gap-2 w-full">
-                            Continue
-                            <ArrowRight className="h-4 w-4" />
+                        <Button type="submit" className="gap-2 w-full" disabled={isSubmitting}>
+                            {isSubmitting ? 'Saving...' : 'Continue'}
+                            {isSubmitting && <ArrowRight className="h-4 w-4" />}
                         </Button>
                     </div>
                 </form>
