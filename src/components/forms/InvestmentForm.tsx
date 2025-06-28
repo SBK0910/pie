@@ -125,7 +125,7 @@ export default function InvestmentForm() {
                     <div className="flex justify-between pt-4  w-full">
                         <Button type="submit" className="gap-2 w-full" disabled={isSubmitting}>
                             {isSubmitting ? 'Saving...' : 'Continue'}
-                            {isSubmitting && <ArrowRight className="h-4 w-4" />}
+                            {!isSubmitting && <ArrowRight className="h-4 w-4" />}
                         </Button>
                     </div>
                 </form>
