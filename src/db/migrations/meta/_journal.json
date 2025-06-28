@@ -15,6 +15,41 @@
       "when": 1750615780783,
       "tag": "0001_oval_mandroid",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1750952882084,
+      "tag": "0002_rapid_ricochet",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1750991049737,
+      "tag": "0003_bored_synch",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1750992365965,
+      "tag": "0004_complete_slayback",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1751039651439,
+      "tag": "0005_absurd_mongu",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1751060800235,
+      "tag": "0006_exotic_starfox",
+      "breakpoints": true
     }
   ]
 }

@@ -2,26 +2,55 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { investmentInfoSchema } from '@/schemas/validators/profiling.validators';
 import { Form } from '../ui/form';
 import { Button } from '../ui/button';
-import { Briefcase, Calendar, Target, ArrowRight } from 'lucide-react';
+import { Briefcase, Calendar, ArrowRight, Users } from 'lucide-react';
 import { useProfiling } from '../providers/profiling-provider';
-import { InvestmentInfoType } from '@/schemas/validators/profiling.validators';
+import { basicRiskProfile, BasicRiskProfileType } from '@/schemas/validators/basicprofile.validator';
 import { FormSelectField } from './reusable/FormSelect';
+import { api } from '@/lib/api/client';
+import { toast } from 'sonner';
+import { useState } from 'react';
 
 export default function InvestmentForm() {
-    const { updateInvestment, updateStage, profiling } = useProfiling();
+    const { updateBasicRisk, updateStage, profiling } = useProfiling();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const form = useForm<InvestmentInfoType>({
-        resolver: zodResolver(investmentInfoSchema),
-        defaultValues: profiling.formData.investment,
+
+    const form = useForm<BasicRiskProfileType>({
+        resolver: zodResolver(basicRiskProfile),
+        defaultValues: {
+            dependents: profiling.formData.basicProfile.dependents,
+            jobSecurity: profiling.formData.basicProfile.jobSecurity,
+            retirementTimeline: profiling.formData.basicProfile.retirementTimeline
+        },
         mode: 'onChange'
     });
 
-    const onSubmit = (values: InvestmentInfoType) => {
-        updateInvestment(values);
-        updateStage('chat');
+    const onSubmit = async (values: BasicRiskProfileType) => {
+        try {
+            setIsSubmitting(true);
+            // Merge current financial profile with new risk values locally
+            const profileData = {
+                ...profiling.formData.basicProfile,
+                ...values,
+            };
+
+            // Persist immediately using merged data (avoids stale context state)
+            await api.saveProfile({
+                basicProfile: profileData,
+                profileId: profiling.formData.profileId,
+            });
+
+            // Update local context state afterwards so UI reflects new stage
+            updateBasicRisk(values);
+            updateStage('chat');
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Failed to save profile';
+            toast.error(message);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -40,9 +69,15 @@ export default function InvestmentForm() {
                                 <Briefcase className="h-4 w-4" />
                                 Job Security
                             </>}
-                            options={Object.entries(investmentInfoSchema.shape.jobSecurity.enum).map(([key, value]) => ({
-                                value: value as string,
-                                label: value as string
+                            options={[
+                                'Not secure', 
+                                'Somewhat secure', 
+                                'Secure', 
+                                'Very secure', 
+                                'Job flexibility'
+                            ].map(option => ({
+                                value: option,
+                                label: option
                             }))}
                             control={form.control}
                             className="w-full"
@@ -55,24 +90,32 @@ export default function InvestmentForm() {
                                 <Calendar className="h-4 w-4" />
                                 Retirement Timeline
                             </>}
-                            options={Object.entries(investmentInfoSchema.shape.retirementTimeline.enum).map(([key, value]) => ({
-                                value: value as string,
-                                label: value as string
+                            options={[
+                                'Less than 5 years', 
+                                '5 - 15 years', 
+                                '15 - 25 years', 
+                                'More than 25 years'
+                            ].map(option => ({
+                                value: option,
+                                label: option
                             }))}
                             control={form.control}
                             className="w-full"
                         />
-
-                        {/* Investment Objective */}
                         <FormSelectField
-                            name="investmentObjective"
+                            name="dependents"
                             label={<>
-                                <Target className="h-4 w-4" />
-                                Investment Objective
+                                <Users className="h-4 w-4" />
+                                Dependents
                             </>}
-                            options={Object.entries(investmentInfoSchema.shape.investmentObjective.enum).map(([key, value]) => ({
-                                value: value as string,
-                                label: value as string
+                            options={[
+                                'Only myself', 
+                                'Two people including myself', 
+                                '3 - 4 people other than myself', 
+                                'More than 4 people other than myself'
+                            ].map(option => ({
+                                value: option,
+                                label: option
                             }))}
                             control={form.control}
                             className="w-full col-span-2"
@@ -80,9 +123,9 @@ export default function InvestmentForm() {
                     </div>
 
                     <div className="flex justify-between pt-4  w-full">
-                        <Button type="submit" className="gap-2 w-full">
-                            Continue
-                            <ArrowRight className="h-4 w-4" />
+                        <Button type="submit" className="gap-2 w-full" disabled={isSubmitting}>
+                            {isSubmitting ? 'Saving...' : 'Continue'}
+                            {!isSubmitting && <ArrowRight className="h-4 w-4" />}
                         </Button>
                     </div>
                 </form>

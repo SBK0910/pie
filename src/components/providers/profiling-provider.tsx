@@ -1,12 +1,20 @@
 'use client';
 
 import { createContext, useState, useContext } from "react";
-import type { ProfilingType, FinancialInfoType, InvestmentInfoType } from "@/schemas/validators/profiling.validators";
+import type { BasicFinancialProfileType, BasicProfileType, BasicRiskProfileType } from "@/schemas/validators/basicprofile.validator";
+
+export type ProfilingType = {
+    stage: 'basic_financial_profile' | 'basic_risk_profile' | 'chat';
+    formData: {
+        basicProfile: BasicProfileType;
+        profileId: string;
+    };
+};
 
 export const ProfilingContext = createContext<{
     profiling: ProfilingType;
-    updateFinancial: (financial: FinancialInfoType) => void;
-    updateInvestment: (investment: InvestmentInfoType) => void;
+    updateBasicFinancial: (financial: BasicFinancialProfileType) => void;
+    updateBasicRisk: (risk: BasicRiskProfileType) => void;
     updateStage: (stage: ProfilingType['stage']) => void;
 } | null>(null);
 
@@ -18,38 +26,46 @@ interface ProfilingProviderProps {
 export default function ProfilingProvider({ children, defaultProfiling }: ProfilingProviderProps) {
     const [profiling, setProfiling] = useState<ProfilingType>(defaultProfiling);
 
-    const updateFinancial = (financial: FinancialInfoType) => {
-        setProfiling({
-            ...profiling,
+    const updateBasicFinancial = (financial: BasicFinancialProfileType) => {
+        setProfiling(prev => ({
+            ...prev,
             formData: {
-                ...profiling.formData,
-                financial,
-            },
-        });
+                ...prev.formData,
+                basicProfile: {
+                    ...prev.formData.basicProfile,
+                    ...financial
+                }
+            }
+        }));
     };
 
-    const updateInvestment = (investment: InvestmentInfoType) => {
-        setProfiling({
-            ...profiling,
+    const updateBasicRisk = (risk: BasicRiskProfileType) => {
+        console.log(risk);
+        setProfiling(prev => ({
+            ...prev,
             formData: {
-                ...profiling.formData,
-                investment,
-            },
-        });
+                ...prev.formData,
+                basicProfile: {
+                    ...prev.formData.basicProfile,
+                    ...risk
+                }
+            }
+        }));
+        console.log(profiling);
     };
 
     const updateStage = (stage: ProfilingType['stage']) => {
-        setProfiling({
-            ...profiling,
+        setProfiling(prev => ({
+            ...prev,
             stage,
-        });
+        }));
     };
 
     return (
         <ProfilingContext.Provider value={{
             profiling,
-            updateFinancial,
-            updateInvestment,
+            updateBasicFinancial,
+            updateBasicRisk,
             updateStage,
         }}>
             {children}

@@ -2,12 +2,11 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { financialInfoSchema } from '@/schemas/validators/profiling.validators';
 import { Form } from '../ui/form';
 import { Button } from '../ui/button';
-import { DollarSign, Shield, Users, ArrowRight } from 'lucide-react';
+import { DollarSign, Shield, ArrowRight } from 'lucide-react';
 import { useProfiling } from '../providers/profiling-provider';
-import { FinancialInfoType } from '@/schemas/validators/profiling.validators';
+import { basicFinancialProfile, BasicFinancialProfileType } from '@/schemas/validators/basicprofile.validator';
 import { FormSelectField } from './reusable/FormSelect';
 import { FormSliderField } from './reusable/FormSlider';
 
@@ -15,22 +14,22 @@ export default function FinancialForm() {
     const {
         profiling: {
             formData: {
-                financial
+                basicProfile
             }
         },
-        updateFinancial,
+        updateBasicFinancial,
         updateStage
     } = useProfiling()
 
-    const form = useForm<FinancialInfoType>({
-        resolver: zodResolver(financialInfoSchema),
-        defaultValues: financial,
+    const form = useForm<BasicFinancialProfileType>({
+        resolver: zodResolver(basicFinancialProfile),
+        defaultValues: basicProfile,
         mode: 'onChange'
     });
 
-    const onSubmit = (values: FinancialInfoType) => {
-        updateFinancial(values);
-        updateStage('investment');
+    const onSubmit = (values: BasicFinancialProfileType) => {
+        updateBasicFinancial(values);
+        updateStage('basic_risk_profile');
     };
 
     return (
@@ -55,6 +54,18 @@ export default function FinancialForm() {
                         step={10000}
                         labelFormatter={(value) => `₹${value.toLocaleString('en-IN')}`}
                     />
+                    <FormSliderField
+                        name="debt"
+                        label={<>
+                            <DollarSign className="h-4 w-4" />
+                            Debt
+                        </>}
+                        control={form.control}
+                        min={0}
+                        max={5000000}
+                        step={10000}
+                        labelFormatter={(value) => `₹${value.toLocaleString('en-IN')}`}
+                    />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Emergency Funds */}
                         <FormSelectField
@@ -63,29 +74,18 @@ export default function FinancialForm() {
                                 <Shield className="h-4 w-4" />
                                 Emergency Funds
                             </>}
-                            options={financialInfoSchema.shape.emergencyFunds.options.map(option => ({
+                            options={[
+                                'Less than 3 months',
+                                '3 - 6 months',
+                                '6 months to 1 year',
+                                'More than 1 year'
+                            ].map(option => ({
                                 value: option,
                                 label: option
                             }))}
                             control={form.control}
-                            className="w-full"
+                            className="w-full col-span-2"
                         />
-
-                        {/* Dependents */}
-                        <FormSelectField
-                            name="dependents"
-                            label={<>
-                                <Users className="h-4 w-4" />
-                                Dependents
-                            </>}
-                            options={financialInfoSchema.shape.dependents.options.map(option => ({
-                                value: option,
-                                label: option
-                            }))}
-                            control={form.control}
-                            className="w-full"
-                        />
-
                     </div>
 
                     {/* Navigation Buttons */}
