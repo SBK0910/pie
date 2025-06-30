@@ -3,12 +3,6 @@ import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
 import { BaseMessage, SystemMessage } from "@langchain/core/messages";
 import { aiMessageSchema } from "@/schemas/validators/aimessage.validator";
-import { ChatOpenAI } from "@langchain/openai";
-
-const llm2 = new ChatOpenAI({
-    apiKey: process.env.GOOGLE_API_KEY,
-    model: "gpt-4o-mini"
-})
 
 const llm = new ChatGoogleGenerativeAI({
     apiKey: process.env.GOOGLE_API_KEY,
@@ -182,7 +176,7 @@ export const riskProfileNode = async (state: typeof RiskProfileState.State): Pro
         }),
     ]);
 
-    let currentMessages = state[state.currentSection];
+    const currentMessages = state[state.currentSection];
     if (currentMessages.length === 0) {
         const res = await llm.invoke(systemPrompt);
         return {
@@ -268,7 +262,7 @@ export const summaryNode = async (state: typeof RiskProfileState.State): Promise
 
     if (state.response) {
         return {
-            
+
         }
     }
 

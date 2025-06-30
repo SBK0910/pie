@@ -11,7 +11,7 @@ import { basicProfiles } from "@/db/schema/basicProfile";
 
 export default async function Home() {
     // Initialize with default values
-    let defaultProfile: ProfilingType = {
+    const defaultProfile: ProfilingType = {
         stage: 'basic_financial_profile',
         formData: {
             profileId: '',
@@ -45,7 +45,7 @@ export default async function Home() {
             }).returning();
         }
 
-        let [basicProfile] = await db.select().
+        const [basicProfile] = await db.select().
             from(basicProfiles).
             where(eq(basicProfiles.id, profile.id))
 

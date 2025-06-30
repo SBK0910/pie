@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const createTraitSchema = <T extends z.ZodTypeAny>(trait: string, values: [string, ...string[]]) => {
+const createTraitSchema = (trait: string, values: [string, ...string[]]) => {
     const valueEnum = z.enum(values as [string, ...string[]]);
     
     return z.discriminatedUnion("isComplete", [

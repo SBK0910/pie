@@ -1,9 +1,5 @@
-import { FC } from "react"
-
-interface IconProps extends React.SVGProps<SVGSVGElement> {}
-
 export const Icons = {
-  google: (props: IconProps) => (
+  google: (props: React.SVGProps<SVGSVGElement>) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"

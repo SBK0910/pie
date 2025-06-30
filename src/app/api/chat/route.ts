@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Initialize thread ID from headers or generate a new one
-        let threadId = req.headers.get("x-thread-id") || uuidv4();
+        const threadId = req.headers.get("x-thread-id") || uuidv4();
         const config = { configurable: { thread_id: threadId } };
 
         // Prepare the messages for the LLM
