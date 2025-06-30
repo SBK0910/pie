@@ -1,8 +1,9 @@
-import { app } from "@/llm/intex";
+import { app } from "@/ai/entry";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import { auth } from "@clerk/nextjs/server";
 import { clerkClient } from "@clerk/nextjs/server";
+import { HumanMessage, AIMessage } from "@langchain/core/messages";
 
 // Using basic auth without user personalization for now
 const clerk = await clerkClient();
@@ -35,47 +36,32 @@ export async function POST(req: NextRequest) {
 
         // Prepare the messages for the LLM
         const llmMessages = [
-            {
-                role: "user",
-                content: `Hello I am ${firstName}.`
-            },
-            ...messages
+            // Greet with personalized introduction
+            new HumanMessage({ content: `Hello, I am ${firstName}.` }),
+            // Preserve role information from previous turns
+            ...messages.map((m: { role: string; content: string }) =>
+                m.role === "assistant"
+                    ? new AIMessage({ content: m.content })
+                    : new HumanMessage({ content: m.content })
+            ),
         ];
+
+        const state = await app.getState(config);
+        console.log(state.values);
+        const currentSection = state.values.currentSection || 'investmentObjective';
 
         // Call the LLM
         const res = await app.invoke({
-            messages: llmMessages
-        }, config);
+            [currentSection]: llmMessages
+        }, config)
 
-        // Get the last assistant message
-        const lastMessage = res.messages[res.messages.length - 1];
-        
-        // Process the response content
-        let content = '';
-        if (Array.isArray(lastMessage.content)) {
-            content = lastMessage.content
-                .filter(part => {
-                    if (typeof part === 'string') return true;
-                    if (part && typeof part === 'object' && 'type' in part && part.type === 'text') {
-                        return true;
-                    }
-                    return false;
-                })
-                .map(part => typeof part === 'string' ? part : 'text' in part ? String(part.text) : '')
-                .join('\n');
-        } else if (typeof lastMessage.content === 'string') {
-            content = lastMessage.content;
-        }
-
-        // Clean the response
-        const cleanContent = content
-            .replace(/^```(?:json)?\s*([\s\S]*?)\s*```$/g, '$1')
-            .trim();
+        console.log(res.traits);
+        console.log(res.summary);
 
         // Return the response
         return NextResponse.json(
             { 
-                message: cleanContent,
+                message: res.response,
                 threadId 
             },
             {

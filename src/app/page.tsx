@@ -58,7 +58,6 @@ export default async function Home() {
     } catch (error) {
         console.error("Error fetching profile:", error);
     }
-    console.log(defaultProfile);
     return (
         <ProfilingProvider defaultProfiling={defaultProfile}>
             <Header />
